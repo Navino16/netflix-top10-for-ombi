@@ -1,17 +1,30 @@
+import { exit } from 'process';
 import reader from 'xlsx';
+import { AppLogger } from '../Utils';
 import { Utils } from '../Utils/Utils';
 
 export class Netflix {
   public static async downloadAllWeeksCountryFile() {
-    await Utils.downloadFile('https://top10.netflix.com/data/all-weeks-countries.xlsx', 'all-weeks-countries.xlsx');
+    await Netflix.downloadFile('https://top10.netflix.com/data/all-weeks-countries.xlsx', 'all-weeks-countries.xlsx');
   }
 
   public static async downloadAllWeeksGlobalFile() {
-    await Utils.downloadFile('https://top10.netflix.com/data/all-weeks-global.xlsx', 'all-weeks-global.xlsx');
+    await Netflix.downloadFile('https://top10.netflix.com/data/all-weeks-global.xlsx', 'all-weeks-global.xlsx');
   }
 
   public static async downloadMostPopularFile() {
-    await Utils.downloadFile('https://top10.netflix.com/data/most-popular.xlsx', 'most-popular.xlsx');
+    await Netflix.downloadFile('https://top10.netflix.com/data/most-popular.xlsx', 'most-popular.xlsx');
+  }
+
+  private static async downloadFile(url: string, targetFile: string) {
+    try {
+      await Utils.downloadFile(url, targetFile);
+    } catch (error) {
+      if (error instanceof Error) {
+        AppLogger.error(`${url}: ${error.message}`);
+        exit(1);
+      }
+    }
   }
 
   public static parseAllWeeksCountryFile(): Netflix.AllWeeksCountryRow[] {
