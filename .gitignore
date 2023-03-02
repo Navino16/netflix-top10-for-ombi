@@ -105,3 +105,8 @@ dist
 
 # Typescript build directory
 build/
+
+bin/
+all-weeks-countries.xlsx
+all-weeks-global.xlsx
+most-popular.xlsx
