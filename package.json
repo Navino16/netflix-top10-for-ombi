@@ -1,0 +1,48 @@
+{
+  "name": "netflix-top10-for-ombi",
+  "version": "1.0.0",
+  "description": "Automaticly request current Netflix top10 on Ombi",
+  "main": "app.js",
+  "scripts": {
+    "build": "rm -rf build/ && npx tsc",
+    "build:dev": "rm -rf build/ && npx tsc --pretty",
+    "build:watch": "rm -rf build/ && npx tsc --pretty -w",
+    "start": "node ./build/app.js",
+    "start:watch": "nodemon ./build/app.js",
+    "lint": "eslint src/",
+    "package": "npm run build && rm -rf bin/ && npx pkg build/app.js --targets=node18-linux-x64,node18-macos-x64,node18-win-x64 --out-path=bin/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Navino16/netflix-top10-for-ombi.git"
+  },
+  "keywords": [
+    "Netflix",
+    "Top10",
+    "Ombi"
+  ],
+  "author": "Nathan Jaunet",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Navino16/netflix-top10-for-ombi/issues"
+  },
+  "homepage": "https://github.com/Navino16/netflix-top10-for-ombi#readme",
+  "devDependencies": {
+    "@types/node": "^18.14.2",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "eslint": "^8.35.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "nodemon": "^2.0.20",
+    "pkg": "^5.8.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "winston": "^3.8.2",
+    "xlsx": "^0.18.5"
+  }
+}
