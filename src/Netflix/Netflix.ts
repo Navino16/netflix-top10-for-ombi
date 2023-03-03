@@ -1,5 +1,6 @@
 import { exit } from 'process';
 import reader from 'xlsx';
+import { AllWeeksCountryRow } from '../types/Netflix';
 import { AppLogger } from '../Utils';
 import { Utils } from '../Utils/Utils';
 
@@ -18,6 +19,7 @@ export class Netflix {
 
   private static async downloadFile(url: string, targetFile: string) {
     try {
+      AppLogger.debug(`Downloading file ${url} in ${targetFile}`);
       await Utils.downloadFile(url, targetFile);
     } catch (error) {
       if (error instanceof Error) {
@@ -27,7 +29,8 @@ export class Netflix {
     }
   }
 
-  public static parseAllWeeksCountryFile(): Netflix.AllWeeksCountryRow[] {
+  public static parseAllWeeksCountryFile(): AllWeeksCountryRow[] {
+    AppLogger.debug('Parsing file ./all-weeks-countries.xlsx');
     const file = reader.readFile('./all-weeks-countries.xlsx');
     return reader.utils.sheet_to_json(file.Sheets[file.SheetNames[0]]);
   }

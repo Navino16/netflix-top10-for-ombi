@@ -1,26 +1,30 @@
 import Constants from './Constants';
-import { Utils } from './Utils';
+import { AppLogger, Utils } from './Utils';
 import { Netflix } from './Netflix';
 import { Ombi } from './Ombi';
+import { OmbiRequestResponse, OmbiSearchResponse } from './types/Ombi';
+import { AllWeeksCountryRow } from './types/Netflix';
 
 Utils.manageCommandArgs();
-const lastSunday = Utils.getLastSunday();
+const lastSunday: string = Utils.getLastSunday();
 
 Netflix.downloadAllWeeksCountryFile().then(() => {
-  const netfilxTop10: Netflix.AllWeeksCountryRow[] = Netflix.parseAllWeeksCountryFile()
-    .filter((item) => item.country_iso2 === Constants.country?.toUpperCase())
-    .filter((item) => item.week === lastSunday);
+  const netfilxTop10: AllWeeksCountryRow[] = Netflix.parseAllWeeksCountryFile()
+    .filter((item: AllWeeksCountryRow) => item.country_iso2 === Constants.country?.toUpperCase())
+    .filter((item: AllWeeksCountryRow) => item.week === lastSunday);
+
   netfilxTop10.forEach(async (element) => {
-    console.log(`Netflix: ${element.category} -> ${element.show_title}`);
-    const ombiMatchs = await Ombi.search(element.show_title, element.category);
-    const filter = ombiMatchs.filter((item) => element.show_title === item.title);
-    let matchingValue = ombiMatchs[0];
-    if (filter.length === 1) {
-      [matchingValue] = filter;
-    }
-    console.log(`Ombi: ${matchingValue.title} -> ${matchingValue.id}`);
-    if (matchingValue.mediaType === 'tv') {
-      Ombi.requestTV(parseInt(matchingValue.id, 10));
+    const matches: OmbiSearchResponse[] = await Ombi.search(element.show_title, element.category);
+    const matchingValue: OmbiSearchResponse = Ombi.getMatchingValue(matches, element.show_title);
+
+    const theMovieDbId: number = parseInt(matchingValue.id, 10);
+    const { mediaType } = matchingValue;
+    const requestResponse: OmbiRequestResponse = await Ombi.request(theMovieDbId, mediaType);
+    if (requestResponse.result === true) {
+      requestResponse.message = requestResponse.message ? requestResponse.message : 'added';
+      AppLogger.info(`${matchingValue.title}: ${requestResponse.message}`);
+    } else if (requestResponse.isError) {
+      AppLogger.warn(`${matchingValue.title}: ${requestResponse.errorMessage}`);
     }
   });
 });

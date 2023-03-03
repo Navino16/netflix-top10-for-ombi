@@ -3,7 +3,7 @@ export default class Constants {
 
   public static ombiApiKey: string;
 
-  public static ombiApiUser: string | null;
+  public static ombiApiUser: string;
 
   public static ombiUrl: string;
 }

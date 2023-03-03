@@ -79,7 +79,7 @@ export class Utils {
       AppLogger.level = values.loglevel ?? 'info';
       Constants.country = values.country ?? '';
       Constants.ombiApiKey = values.ombiApiKey ?? '';
-      Constants.ombiApiUser = values.ombiApiUser ?? null;
+      Constants.ombiApiUser = values.ombiApiUser ?? '';
       Constants.ombiUrl = values.ombiUrl ?? '';
     } catch (error) {
       if (error instanceof TypeError) {
