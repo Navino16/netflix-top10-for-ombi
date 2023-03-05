@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master", "dev" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Cache node_modules
+        id: cache-nodes-modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+      - name: Install project dependancies
+        run: npm ci
+      - name: Build project
+      - run: npm run build
+      - name: Upload build result
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build/
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Restore node_modules
+        id: cache-nodes-modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+      - name: Restore build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: build/
+      - run: npm run package
+      - uses: actions/upload-artifact@v3
+        with:
+          name: netflix-top10-for-ombi
+          path: bin/
