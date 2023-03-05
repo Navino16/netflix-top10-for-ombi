@@ -10,7 +10,7 @@
     "start": "node ./build/app.js",
     "start:watch": "nodemon ./build/app.js",
     "lint": "eslint src/",
-    "package": "npm run build && rm -rf bin/ && npx pkg build/app.js --targets=node18-linux-x64,node18-macos-x64,node18-win-x64 --out-path=bin/",
+    "package": "npm run build && rm -rf bin/ && npx pkg build/app.js --targets=node18-linux-x64,node18-macos-x64,node18-win-x64 -o bin/netflix-top10-for-ombi",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

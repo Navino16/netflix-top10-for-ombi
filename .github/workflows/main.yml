@@ -53,7 +53,19 @@ jobs:
           name: build
           path: build/
       - run: npm run package
-      - uses: actions/upload-artifact@v3
+      - name: Upload linux artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: netflix-top10-for-ombi
-          path: bin/
+          name: netflix-top10-for-ombi-linux
+          path: bin/netflix-top10-for-ombi-linux
+      - name: Upload macos artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: netflix-top10-for-ombi-macos
+          path: bin/netflix-top10-for-ombi-macos
+      - name: Upload windows artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: netflix-top10-for-ombi-win
+          path: bin/netflix-top10-for-ombi-win.exe
+
