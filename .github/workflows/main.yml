@@ -24,7 +24,7 @@ jobs:
       - name: Install project dependancies
         run: npm ci
       - name: Build project
-      - run: npm run build
+        run: npm run build
       - name: Upload build result
         uses: actions/upload-artifact@v3
         with:
