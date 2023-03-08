@@ -30,7 +30,7 @@ export class Ombi {
       }
 
       const res = await request
-        .post(`${Constants.ombiUrl}/api/v2/Search/multi/${encodeURI(searchTerm)}`)
+        .post(`${Constants.ombiUrl}/api/v2/Search/multi/${encodeURIComponent(searchTerm)}`)
         .send(data)
         .set('accept', 'text/plain')
         .set('ApiKey', Constants.ombiApiKey)
@@ -57,7 +57,7 @@ export class Ombi {
    * @param {String} mediaType
    * @returns {Promise<OmbiRequestResponse}
    */
-  public static async request(id: number, mediaType: string): Promise<OmbiRequestResponse> {
+  public static async request(id: number, mediaType: string): Promise<OmbiRequestResponse | null> {
     if (mediaType === 'tv') {
       return Ombi.requestTV(id);
     }
@@ -71,9 +71,9 @@ export class Ombi {
    * @param {Number} id
    * @returns {Promise<OmbiRequestResponse>}
    */
-  private static async requestTV(id: number): Promise<OmbiRequestResponse> {
+  private static async requestTV(id: number): Promise<OmbiRequestResponse | null> {
     AppLogger.debug(`Requesting show: ${id}`);
-    let requestStatus: OmbiRequestResponse;
+    let requestStatus: OmbiRequestResponse | null = null;
     try {
       const res = await request
         .post(`${Constants.ombiUrl}/api/v2/Requests/tv`)
@@ -88,11 +88,10 @@ export class Ombi {
       requestStatus = res.body;
     } catch (error: unknown) {
       if ((error as ResponseError)?.response?.error) {
-        AppLogger.error(`Error while requesting TV show: ${(error as ResponseError)?.response?.error}`);
+        AppLogger.error(`Error while requesting TV show with ID ${id}: ${(error as ResponseError)?.response?.error}`);
       } else {
-        AppLogger.error(`Error while requesting TV show: ${(error as Error).message}`);
+        AppLogger.error(`Error while requesting TV show with ID ${id}: ${(error as Error).message}`);
       }
-      exit(1);
     }
     return requestStatus;
   }

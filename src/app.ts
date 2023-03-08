@@ -19,12 +19,14 @@ Netflix.downloadAllWeeksCountryFile().then(() => {
 
     const theMovieDbId: number = parseInt(matchingValue.id, 10);
     const { mediaType } = matchingValue;
-    const requestResponse: OmbiRequestResponse = await Ombi.request(theMovieDbId, mediaType);
-    if (requestResponse.result === true) {
+    const requestResponse: OmbiRequestResponse | null = await Ombi.request(theMovieDbId, mediaType);
+    if (requestResponse && requestResponse.result === true) {
       requestResponse.message = requestResponse.message ? requestResponse.message : 'added';
       AppLogger.info(`${matchingValue.title}: ${requestResponse.message}`);
-    } else if (requestResponse.isError) {
+    } else if (requestResponse && requestResponse.isError) {
       AppLogger.warn(`${matchingValue.title}: ${requestResponse.errorMessage}`);
+    } else {
+      AppLogger.error(`${matchingValue.title}: Unknown error`);
     }
   });
 });
