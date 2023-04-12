@@ -102,3 +102,11 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Typescript build directory
+build/
+
+bin/
+all-weeks-countries.xlsx
+all-weeks-global.xlsx
+most-popular.xlsx
