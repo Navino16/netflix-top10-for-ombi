@@ -17,6 +17,11 @@ Netflix.downloadAllWeeksCountryFile().then(() => {
     const matches: OmbiSearchResponse[] = await Ombi.search(element.show_title, element.category);
     const matchingValue: OmbiSearchResponse = Ombi.getMatchingValue(matches, element.show_title);
 
+    if (matchingValue === undefined) {
+      AppLogger.error(`No match for: ${element.show_title}`);
+      return;
+    }
+
     const theMovieDbId: number = parseInt(matchingValue.id, 10);
     const { mediaType } = matchingValue;
     const requestResponse: OmbiRequestResponse | null = await Ombi.request(theMovieDbId, mediaType);
