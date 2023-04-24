@@ -12,12 +12,13 @@ export class Utils {
   public static printHelpAndExit() {
     process.stdout.write('Usage: netflix-top10-for-ombi [OPTION]...\n\n');
     process.stdout.write('Options:\n\n');
-    process.stdout.write('\t-c,\t--country\n');
-    process.stdout.write('\t-h,\t--help\t\t\tdisplay this help and exit\n');
-    process.stdout.write('\t-l,\t--loglevel\t\tapplication loglevel (default: info)\n');
+    process.stdout.write('\t-c,\t--country\t\tSelect from which country top10 is retrived\n');
+    process.stdout.write('\t-d,\t--date\t\t\tChange current date (to get past top10)\n');
+    process.stdout.write('\t-h,\t--help\t\t\tDisplay this help and exit\n');
+    process.stdout.write('\t-l,\t--loglevel\t\tApplication loglevel (default: info)\n');
     process.stdout.write('\t\t--ombiApiKey\t\tOmbi API key\n');
     process.stdout.write('\t\t--ombiUrl\t\tOmbi URL\n');
-    process.stdout.write('\t-v,\t--version\t\tdisplay version information and exit\n');
+    process.stdout.write('\t-v,\t--version\t\tDisplay version information and exit\n');
     exit(0);
   }
 
@@ -42,6 +43,10 @@ export class Utils {
           country: {
             type: 'string',
             short: 'c',
+          },
+          date: {
+            type: 'string',
+            short: 'd',
           },
           help: {
             type: 'boolean',
@@ -81,6 +86,7 @@ export class Utils {
       Constants.ombiApiKey = values.ombiApiKey ?? '';
       Constants.ombiApiUser = values.ombiApiUser ?? '';
       Constants.ombiUrl = values.ombiUrl ?? '';
+      Constants.currentDate = values.date ? new Date(Date.parse(values.date)) : new Date();
     } catch (error) {
       if (error instanceof TypeError) {
         AppLogger.error(error.message);
@@ -105,6 +111,11 @@ export class Utils {
       AppLogger.error('Country must be defined');
       asError = true;
     }
+    if (values.date && (!values.date.match(/\d{4}-\d{2}-\d{2}/) || Number.isNaN(Date.parse(values.date)))) {
+      AppLogger.error('Invalid date format, expected format is YYYY-MM-DD');
+      asError = true;
+    }
+
     if (!values.ombiApiKey) {
       AppLogger.error('OmbiApiKey must be defined');
       asError = true;
@@ -163,7 +174,7 @@ export class Utils {
    * @returns {string}
    */
   public static getLastSunday(): string {
-    const d = new Date();
+    const d = Constants.currentDate;
     d.setDate(d.getDate() + 1);
     const t = new Date(d);
     t.setDate(t.getDate() - t.getDay());

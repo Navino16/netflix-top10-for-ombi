@@ -6,4 +6,6 @@ export default class Constants {
   public static ombiApiUser: string;
 
   public static ombiUrl: string;
+
+  public static currentDate: Date;
 }
